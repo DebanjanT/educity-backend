@@ -19,7 +19,7 @@ readdirSync("./routes").map((r) => app.use("/api", require(`./routes/${r}`)));
 
 //db connect with atlas by mongoose
 mongoose
-  .connect(process.env.DATABASE)
+  .connect(process.env.LOCALDB)
   .then(() => console.log("Mongodb connected"))
   .catch((err) => console.log(err));
 
