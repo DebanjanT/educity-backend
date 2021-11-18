@@ -65,3 +65,15 @@ export const login = async (req, res) => {
     res.status(400).send("Error with Login");
   }
 };
+
+export const logout = async (req, res) => {
+  try {
+    //remove cookie
+    res.clearCookie("token");
+
+    return res.json({ message: "You have logged out" });
+  } catch (err) {
+    console.log(err);
+    res.status(400).send(err);
+  }
+};
