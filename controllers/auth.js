@@ -2,6 +2,16 @@ import User from "../models/user";
 import { hashPassword, comparePassword } from "../utils/auth";
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
+import AWS from "aws-sdk";
+//aws config
+const awsConfig = {
+  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+  region: process.env.AWS_REGION,
+  apiVersion: process.env.AWS_API_VERSION,
+};
+//creating new ses instance
+const ses = new AWS.SES(awsConfig);
 
 export const register = async (req, res) => {
   try {
@@ -76,4 +86,18 @@ export const logout = async (req, res) => {
     console.log(err);
     res.status(400).send(err);
   }
+};
+
+export const currentUser = async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id).select("-password").exec();
+    return res.json({ secure: true });
+  } catch (err) {
+    console.log("Current user error", err);
+  }
+};
+
+export const sendEmail = async (req, res) => {
+  console.log("sending email route test using aws ses");
+  res.json({ ok: true });
 };
