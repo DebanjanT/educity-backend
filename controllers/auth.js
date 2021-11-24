@@ -3,15 +3,10 @@ import { hashPassword, comparePassword } from "../utils/auth";
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 import AWS from "aws-sdk";
-//aws config
-const awsConfig = {
-  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-  region: process.env.AWS_REGION,
-  apiVersion: process.env.AWS_API_VERSION,
-};
+import { awsConfig } from "../config/aws_config";
+
 //creating new ses instance
-const ses = new AWS.SES(awsConfig);
+const SES = new AWS.SES(awsConfig);
 
 export const register = async (req, res) => {
   try {
@@ -97,7 +92,50 @@ export const currentUser = async (req, res) => {
   }
 };
 
+//sending email by aws SES service
 export const sendEmail = async (req, res) => {
-  console.log("sending email route test using aws ses");
-  res.json({ ok: true });
+  // console.log("sending email route test using aws ses");
+  // res.json({ ok: true });
+  const params = {
+    Source: process.env.EMAIL_FROM,
+    Destination: {
+      ToAddresses: ["debanjantewary.1997@gmail.com"],
+    },
+    ReplyToAddresses: [process.env.EMAIL_FROM],
+    Message: {
+      Body: {
+        Html: {
+          Charset: "UTF-8",
+          Data: `
+          <html>
+          <h1>Reset Password Link</h1>
+          <p>Please use this following link to reset password</p>
+          </html>
+          `,
+        },
+      },
+      Subject: {
+        Charset: "UTF-8",
+        Data: "Password reset educity",
+      },
+    },
+  };
+  const emailSent = SES.sendEmail(params).promise();
+  emailSent
+    .then((data) => {
+      console.log(data);
+      res.json({ ok: true });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+
+export const forgotPassword = async (req, res) => {
+  try {
+    const { email } = req.body;
+    console.log(email);
+  } catch (err) {
+    console.log(err);
+  }
 };
