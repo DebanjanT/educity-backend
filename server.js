@@ -31,7 +31,7 @@ app.get("/api/csrf-token", (req, res) => {
   res.json({ csrfToken: req.csrfToken() });
 });
 
-//db connect with atlas by mongoose
+//db connect with atlas/localdb by mongoose
 mongoose
   .connect(process.env.LOCALDB)
   .then(() => console.log("Mongodb connected"))

@@ -4,9 +4,10 @@ const jwt = require("jsonwebtoken");
 require("dotenv").config();
 import AWS from "aws-sdk";
 import { awsConfig } from "../config/aws_config";
+import {nanoid} from 'nanoid';
 
 //creating new ses instance
-const SES = new AWS.SES(awsConfig);
+const SES = new AWS.SES(awsConfig); 
 
 export const register = async (req, res) => {
   try {
@@ -134,8 +135,76 @@ export const sendEmail = async (req, res) => {
 export const forgotPassword = async (req, res) => {
   try {
     const { email } = req.body;
-    console.log(email);
+    const shortCode = nanoid(8).toUpperCase();
+
+    const user = await User.findOneAndUpdate({email}, {passwordResetCode: shortCode})
+    if(!user) return res.status(400).send("User not found with this email")
+
+    const params = {
+      Source: process.env.EMAIL_FROM,
+      Destination: {
+        ToAddresses: [email],
+      },
+      ReplyToAddresses: [process.env.EMAIL_FROM],
+      Message: {
+        Body: {
+          Html: {
+            Charset: "UTF-8",
+            Data: `
+            <html>
+            <h1>Reset Password Link</h1>
+            <p>Please use this following code <strong> ${shortCode} </strong> to reset password</p>
+
+            </html>
+            `,
+          },
+        },
+        Subject: {
+          Charset: "UTF-8",
+          Data: "Password reset educity",
+        },
+      },
+    };
+    const emailSent = SES.sendEmail(params).promise();
+    emailSent
+      .then((data) => {
+        console.log(data);
+        res.json({ ok: true });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    
   } catch (err) {
     console.log(err);
   }
 };
+
+export const resetPassword = async(req,res) =>{
+  try{
+    const {email, code, newPassword} = req.body;
+
+    //password length check
+    if(newPassword.length < 6) return res.status(400).send("Password must be atleast 6 characters long ")
+
+    //hash password
+    const newHashedPassword = await hashPassword(newPassword);
+  
+    //find user with email and code and update
+    const user = await User.findOneAndUpdate({
+      email,
+      passwordResetCode:code,
+    },
+    {
+      password:newHashedPassword,
+      passwordResetCode:'',
+    })
+  
+    if(!user) return res.status(400).send("Incorrect Credentials , check reset code")
+    res.json({ok:true})
+
+  }catch(err){
+    console.log(err);
+    return res.status(400).send("Something went wrong! Try again")
+  }
+}

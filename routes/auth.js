@@ -7,6 +7,7 @@ import {
   currentUser,
   sendEmail,
   forgotPassword,
+  resetPassword
 } from "../controllers/auth";
 import { requireSignin } from "../middleware";
 
@@ -20,5 +21,6 @@ router.get("/logout", logout);
 router.get("/current-user", requireSignin, currentUser);
 router.get("/send-email", sendEmail);
 router.post("/forgot-password", forgotPassword);
+router.post("/reset-password", resetPassword);
 
 module.exports = router;
