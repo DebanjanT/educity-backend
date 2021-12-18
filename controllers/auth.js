@@ -4,10 +4,10 @@ const jwt = require("jsonwebtoken");
 require("dotenv").config();
 import AWS from "aws-sdk";
 import { awsConfig } from "../config/aws_config";
-import {nanoid} from 'nanoid';
+import { nanoid } from "nanoid";
 
 //creating new ses instance
-const SES = new AWS.SES(awsConfig); 
+const SES = new AWS.SES(awsConfig);
 
 export const register = async (req, res) => {
   try {
@@ -52,13 +52,9 @@ export const login = async (req, res) => {
     if (!passwordMatch)
       return res.status(400).send("Please Enter correct Password");
     //generate token
-    const token = jwt.sign(
-      { _id: user._id },
-      process.env.JWT_SECRET,
-      {
-        expiresIn: "7d",
-      }
-    );
+    const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, {
+      expiresIn: "7d",
+    });
     //send cookie without user's password
     user.password = undefined;
     res.cookie("token", token, {
@@ -86,7 +82,10 @@ export const logout = async (req, res) => {
 
 export const currentUser = async (req, res) => {
   try {
-    const user = await User.findById(req.user._id).select("-password").exec();
+    const user = await User.findById(req.user._id)
+      .select("-password")
+      .select("-passwordResetCode")
+      .exec();
     return res.json({ secure: true });
   } catch (err) {
     console.log("Current user error", err);
@@ -137,8 +136,11 @@ export const forgotPassword = async (req, res) => {
     const { email } = req.body;
     const shortCode = nanoid(8).toUpperCase();
 
-    const user = await User.findOneAndUpdate({email}, {passwordResetCode: shortCode})
-    if(!user) return res.status(400).send("User not found with this email")
+    const user = await User.findOneAndUpdate(
+      { email },
+      { passwordResetCode: shortCode }
+    );
+    if (!user) return res.status(400).send("User not found with this email");
 
     const params = {
       Source: process.env.EMAIL_FROM,
@@ -174,37 +176,46 @@ export const forgotPassword = async (req, res) => {
       .catch((err) => {
         console.log(err);
       });
-    
   } catch (err) {
     console.log(err);
   }
 };
 
-export const resetPassword = async(req,res) =>{
-  try{
-    const {email, code, newPassword} = req.body;
+export const resetPassword = async (req, res) => {
+  try {
+    const { email, code, newPassword } = req.body;
 
     //password length check
-    if(newPassword.length < 6) return res.status(400).send("Password must be atleast 6 characters long ")
+    if (newPassword.length < 6)
+      return res
+        .status(400)
+        .send("Password must be atleast 6 characters long ");
 
     //hash password
     const newHashedPassword = await hashPassword(newPassword);
-  
-    //find user with email and code and update
-    const user = await User.findOneAndUpdate({
-      email,
-      passwordResetCode:code,
-    },
-    {
-      password:newHashedPassword,
-      passwordResetCode:'',
-    })
-  
-    if(!user) return res.status(400).send("Incorrect Credentials , check reset code")
-    res.json({ok:true})
 
-  }catch(err){
+    //find user with email and code and update
+    const user = await User.findOneAndUpdate(
+      {
+        email,
+        passwordResetCode: code,
+      },
+      {
+        password: newHashedPassword,
+        passwordResetCode: "",
+      }
+    );
+
+    if (!user)
+      return res.status(400).send("Incorrect Credentials , check reset code");
+    res.json({ ok: true });
+  } catch (err) {
     console.log(err);
-    return res.status(400).send("Something went wrong! Try again")
+    return res.status(400).send("Something went wrong! Try again");
   }
-}
+};
+
+export const stripeOnboard = async (req, res) => {
+  //intit stripe onvoarding for instructors
+  console.log("stripe onboard api hit");
+};

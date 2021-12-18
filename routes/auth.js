@@ -7,7 +7,7 @@ import {
   currentUser,
   sendEmail,
   forgotPassword,
-  resetPassword
+  resetPassword,
 } from "../controllers/auth";
 import { requireSignin } from "../middleware";
 

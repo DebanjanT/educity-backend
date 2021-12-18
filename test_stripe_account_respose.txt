@@ -1,0 +1,73 @@
+{
+  id: 'acct_1K89DFSBO3yTmoVG',
+  object: 'account',
+  business_profile: {
+    mcc: '5734',
+    name: null,
+    support_address: null,
+    support_email: null,
+    support_phone: '+917001026851',
+    support_url: null,
+    url: 'https://educity.cloud'
+  },
+  capabilities: { card_payments: 'active', transfers: 'active' },
+  charges_enabled: true,
+  controller: { is_controller: true, type: 'application' },
+  country: 'IN',
+  default_currency: 'inr',
+  details_submitted: true,
+  email: 'rijupubgmobile@gmail.com',
+  external_accounts: {
+    object: 'list',
+    data: [ [Object] ],
+    has_more: false,
+    total_count: 1,
+    url: '/v1/accounts/acct_1K89DFSBO3yTmoVG/external_accounts'
+  },
+  future_requirements: {
+    alternatives: [],
+    current_deadline: null,
+    currently_due: [],
+    disabled_reason: null,
+    errors: [],
+    eventually_due: [],
+    past_due: [],
+    pending_verification: []
+  },
+  metadata: {},
+  payouts_enabled: false,
+  requirements: {
+    alternatives: [ [Object] ],
+    current_deadline: null,
+    currently_due: [ 'external_accounts.ba_1K89K4SBO3yTmoVGjjfL2HBB' ],
+    disabled_reason: 'requirements.past_due',
+    errors: [ [Object] ],
+    eventually_due: [ 'external_accounts.ba_1K89K4SBO3yTmoVGjjfL2HBB' ],
+    past_due: [ 'external_accounts.ba_1K89K4SBO3yTmoVGjjfL2HBB' ],
+    pending_verification: []
+  },
+  settings: {
+    bacs_debit_payments: {},
+    branding: {
+      icon: null,
+      logo: null,
+      primary_color: null,
+      secondary_color: null
+    },
+    card_issuing: { tos_acceptance: [Object] },
+    card_payments: { statement_descriptor_prefix: 'TINS' },
+    dashboard: { display_name: 'educity.cloud', timezone: 'Etc/UTC' },
+    payments: {
+      statement_descriptor: 'TEST INSTRUCTOR',
+      statement_descriptor_kana: null,
+      statement_descriptor_kanji: null
+    },
+    payouts: {
+      debit_negative_balances: true,
+      schedule: [Object],
+      statement_descriptor: null
+    },
+    sepa_debit_payments: {}
+  },
+  type: 'standard'
+}

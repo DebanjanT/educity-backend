@@ -27,7 +27,7 @@ const userSchema = new Schema(
     role: {
       type: [String],
       default: ["Subscriber"],
-      enum: ["Subscriber", "Admin", "Istructor"],
+      enum: ["Subscriber", "Admin", "Instructor"],
     },
     stripe_account_id: "",
     stripe_seller: {},
