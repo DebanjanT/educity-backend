@@ -14,7 +14,8 @@ const app = express();
 const csrfProtection = csrf({ cookie: true });
 
 // ** express middleware (execute before sending response to client)
-app.use(express.json());
+// use limit to express to allow user image upload upto 5mb , this is required to avoid "payload too large error" while api hit
+app.use(express.json({ limit: "5mb" }));
 app.use(cors());
 //morgan for debug requestsß
 app.use(morgan("dev"));

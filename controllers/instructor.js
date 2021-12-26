@@ -68,6 +68,7 @@ export const currentInstructor = async (req, res) => {
   try {
     const user = await User.findById(req.user._id).select("-password").exec();
     if (!user.role.includes("Instructor")) {
+      //to send only status use sendStatus instead of status
       return res.sendStatus(403);
     } else {
       res.json({ secure: true });
