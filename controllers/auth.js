@@ -19,6 +19,8 @@ export const register = async (req, res) => {
         .status(400)
         .send("Password is required & must be atleast 6 char long");
 
+    if (!email) return res.status(400).send("Email is required");
+
     const emailExists = await User.findOne({ email }).exec();
     if (emailExists)
       return res.status(400).send("User with this email already exists");
