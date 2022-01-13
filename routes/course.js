@@ -62,7 +62,7 @@ router.get(
   getCourses
 );
 
-router.get("/course/:slug", getSingleCourse);
+router.get("/course/:slug", requireSignin, isInstructor, getSingleCourse);
 
 //max 1gb upload
 router.post(
@@ -88,7 +88,12 @@ router.post(
 );
 
 router.get("/course/get-notion", getNotion);
-router.put("/course/update-course/:slug", requireSignin, updateCourse);
+router.put(
+  "/course/update-course/:slug",
+  requireSignin,
+  isInstructor,
+  updateCourse
+);
 
 //update course after removing lessons
 router.put(
