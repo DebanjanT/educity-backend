@@ -63,10 +63,12 @@ router.get(
 );
 
 router.get("/course/:slug", getSingleCourse);
+
+//max 1gb upload
 router.post(
   "/course/lesson-video-upload/:instructorId",
   requireSignin,
-  formidable(),
+  formidable({ maxFieldsSize: 1024 * 1024 * 1024 }),
   uploadLessonVideo
 );
 
