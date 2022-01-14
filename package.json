@@ -28,6 +28,6 @@
     "nodemon": "^2.0.15",
     "query-string": "^7.0.1",
     "slugify": "^1.6.4",
-    "stripe": "^8.194.0"
+    "stripe": "^8.195.0"
   }
 }
