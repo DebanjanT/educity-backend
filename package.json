@@ -10,7 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@notionhq/client": "^0.4.11",
+    "@notionhq/client": "^3.0.0",
     "aws-sdk": "^2.1035.0",
     "bcrypt": "^5.0.1",
     "cookie-parser": "^1.4.6",
