@@ -12,7 +12,7 @@
   "dependencies": {
     "@notionhq/client": "^0.4.11",
     "aws-sdk": "^2.1035.0",
-    "bcrypt": "^5.0.1",
+    "bcrypt": "^6.0.0",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "csurf": "^1.11.0",
